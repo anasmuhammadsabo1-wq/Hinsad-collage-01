@@ -1,0 +1,123 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global Safety Net - Default Deny Catch-All
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() > 0 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        (request.auth.token.email == 'ANASMUHAMMADSABO1@gmail.com' && request.auth.token.email_verified == true) ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    // --- Entity Validators ---
+
+    function isValidApplication(data) {
+      return data.id is string && data.id.size() >= 3 && data.id.size() <= 64 &&
+             data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 120 &&
+             data.email is string && data.email.size() <= 120 &&
+             data.phone is string && data.phone.size() <= 30 &&
+             data.programChoice1 is string && data.programChoice1.size() <= 150 &&
+             data.status in ['submitted', 'under_review', 'admitted', 'declined'] &&
+             data.paymentStatus in ['paid', 'pending'] &&
+             data.createdAt is string && data.createdAt.size() <= 40;
+    }
+
+    function isValidInquiry(data) {
+      return data.fullName is string && data.fullName.size() >= 2 && data.fullName.size() <= 120 &&
+             data.email is string && data.email.size() <= 120 &&
+             data.message is string && data.message.size() >= 3 && data.message.size() <= 1000 &&
+             data.createdAt is string && data.createdAt.size() <= 40;
+    }
+
+    function isValidUserProfile(data, uid) {
+      return data.uid == uid &&
+             data.email is string && data.email.size() <= 120 &&
+             data.role in ['student', 'faculty', 'admin'] &&
+             data.createdAt is string && data.createdAt.size() <= 40;
+    }
+
+    function isValidAnnouncement(data) {
+      return data.title is string && data.title.size() >= 3 && data.title.size() <= 200 &&
+             data.category is string && data.category.size() <= 50 &&
+             data.content is string && data.content.size() >= 3 && data.content.size() <= 2000 &&
+             data.isPublished is bool &&
+             data.createdAt is string && data.createdAt.size() <= 40;
+    }
+
+    // --- Collection Rules ---
+
+    // 1. Applications collection
+    match /applications/{applicationId} {
+      allow get: if isValidId(applicationId);
+      allow list: if isAdmin() || (isSignedIn() && resource.data.applicantUid == request.auth.uid);
+      allow create: if isValidId(applicationId) &&
+                       isValidApplication(incoming()) &&
+                       (incoming().applicantUid == null || (isSignedIn() && incoming().applicantUid == request.auth.uid)) &&
+                       incoming().status in ['submitted', 'under_review'];
+      allow update: if isValidId(applicationId) &&
+                       isValidApplication(incoming()) && (
+                         isAdmin() ||
+                         (isSignedIn() && existing().applicantUid == request.auth.uid &&
+                          incoming().diff(existing()).affectedKeys().hasOnly(['phone', 'address', 'updatedAt']) &&
+                          incoming().applicantUid == existing().applicantUid)
+                       );
+      allow delete: if isValidId(applicationId) && isAdmin();
+    }
+
+    // 2. Inquiries collection
+    match /inquiries/{inquiryId} {
+      allow get, list: if isAdmin();
+      allow create: if isValidId(inquiryId) && isValidInquiry(incoming());
+      allow update, delete: if isValidId(inquiryId) && isAdmin();
+    }
+
+    // 3. User Profiles
+    match /users/{userId} {
+      allow get: if isValidId(userId) && (isSignedIn() && (request.auth.uid == userId || isAdmin()));
+      allow list: if isAdmin();
+      allow create: if isValidId(userId) &&
+                       isSignedIn() &&
+                       request.auth.uid == userId &&
+                       isValidUserProfile(incoming(), userId) &&
+                       incoming().role in ['student', 'faculty'];
+      allow update: if isValidId(userId) &&
+                       isSignedIn() && (
+                         isAdmin() ||
+                         (request.auth.uid == userId &&
+                          isValidUserProfile(incoming(), userId) &&
+                          incoming().role == existing().role &&
+                          incoming().diff(existing()).affectedKeys().hasOnly(['displayName', 'photoURL', 'lastLoginAt']))
+                       );
+      allow delete: if isValidId(userId) && isAdmin();
+    }
+
+    // 4. Announcements
+    match /announcements/{announcementId} {
+      allow get: if isValidId(announcementId) && (resource.data.isPublished == true || isAdmin());
+      allow list: if resource.data.isPublished == true || isAdmin();
+      allow create, update, delete: if isValidId(announcementId) && isAdmin() && (request.method == 'delete' || isValidAnnouncement(incoming()));
+    }
+  }
+}

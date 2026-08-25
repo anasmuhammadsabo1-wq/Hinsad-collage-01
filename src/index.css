@@ -1,0 +1,153 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-page: #FAF7F2;
+    --bg-card: #FFFFFF;
+    --bg-card-alt: #F4EFE6;
+    --bg-milk-soft: #FCFAF6;
+    --border-milk: #E7E0D2;
+    --text-main: #14281E;
+    --text-muted: #4B6356;
+    --green-primary: #065F46;
+    --green-accent: #047857;
+    --green-subtle: #ECFDF5;
+    --green-badge-bg: #E6F4EA;
+    --green-badge-text: #064E3B;
+  }
+
+  [data-theme="night"], .night-mode, .dark {
+    --bg-page: #0A1017;
+    --bg-card: #121A23;
+    --bg-card-alt: #182330;
+    --bg-milk-soft: #0E161F;
+    --border-milk: #223243;
+    --text-main: #F1F5F9;
+    --text-muted: #94A3B8;
+    --green-primary: #10B981;
+    --green-accent: #34D399;
+    --green-subtle: #064E3B40;
+    --green-badge-bg: #064E3B60;
+    --green-badge-text: #6EE7B7;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: var(--bg-page);
+    color: var(--text-main);
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  body.day-mode {
+    background-color: #FAF7F2;
+    color: #14281E;
+  }
+
+  body.night-mode {
+    background-color: #0A1017;
+    color: #F1F5F9;
+  }
+
+  h1, h2, h3, h4, h5, h6, .font-display {
+    font-family: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Custom Milk White & Health Green Theming Classes */
+.theme-milk-canvas {
+  background-color: #FAF7F2;
+}
+.night-mode .theme-milk-canvas {
+  background-color: #0A1017;
+}
+
+.theme-milk-card {
+  background-color: #FFFFFF;
+  border-color: #E7E0D2;
+}
+.night-mode .theme-milk-card {
+  background-color: #121A23;
+  border-color: #223243;
+}
+
+.theme-milk-card-alt {
+  background-color: #F4EFE6;
+  border-color: #E2DBD0;
+}
+.night-mode .theme-milk-card-alt {
+  background-color: #182330;
+  border-color: #243548;
+}
+
+.theme-milk-soft {
+  background-color: #FCFAF6;
+}
+.night-mode .theme-milk-soft {
+  background-color: #0E161F;
+}
+
+.theme-green-text {
+  color: #065F46;
+}
+.night-mode .theme-green-text {
+  color: #34D399;
+}
+
+.theme-green-subtle {
+  background-color: #ECFDF5;
+  color: #064E3B;
+  border-color: #A7F3D0;
+}
+.night-mode .theme-green-subtle {
+  background-color: rgba(6, 78, 59, 0.4);
+  color: #6EE7B7;
+  border-color: rgba(16, 185, 129, 0.3);
+}
+
+.theme-subtle-border {
+  border-color: #E7E0D2;
+}
+.night-mode .theme-subtle-border {
+  border-color: #223243;
+}
+
+.theme-text-title {
+  color: #14281E;
+}
+.night-mode .theme-text-title {
+  color: #F1F5F9;
+}
+
+.theme-text-body {
+  color: #334A3E;
+}
+.night-mode .theme-text-body {
+  color: #CBD5E1;
+}
+
+.theme-text-muted {
+  color: #5B7367;
+}
+.night-mode .theme-text-muted {
+  color: #94A3B8;
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(0, 135, 81, 0.4), 0 0 30px rgba(0, 51, 153, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(0, 135, 81, 0.7), 0 0 45px rgba(0, 51, 153, 0.4);
+  }
+}
+
+.animate-glow {
+  animation: pulseGlow 3s infinite ease-in-out;
+}
+
+

@@ -1,0 +1,261 @@
+{
+  "entities": {
+    "Application": {
+      "title": "Application",
+      "description": "Student admission application for academic programs at HINSAD College of Health Technology.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique application identifier (e.g. HIN-2025-XXXX).",
+          "maxLength": 64
+        },
+        "applicantUid": {
+          "type": "string",
+          "description": "Firebase Auth UID of the applicant if authenticated.",
+          "maxLength": 128
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Full name of the prospective student.",
+          "maxLength": 120,
+          "minLength": 2
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Contact email address of the applicant.",
+          "maxLength": 120
+        },
+        "phone": {
+          "type": "string",
+          "description": "Contact telephone / WhatsApp number.",
+          "maxLength": 30
+        },
+        "gender": {
+          "type": "string",
+          "description": "Gender of the applicant.",
+          "enum": ["Male", "Female"]
+        },
+        "dateOfBirth": {
+          "type": "string",
+          "description": "Date of birth (YYYY-MM-DD).",
+          "maxLength": 30
+        },
+        "stateOfOrigin": {
+          "type": "string",
+          "description": "State of origin within Nigeria.",
+          "maxLength": 60
+        },
+        "lga": {
+          "type": "string",
+          "description": "Local Government Area of origin.",
+          "maxLength": 80
+        },
+        "address": {
+          "type": "string",
+          "description": "Residential address.",
+          "maxLength": 250
+        },
+        "programChoice1": {
+          "type": "string",
+          "description": "First choice of academic program.",
+          "maxLength": 150
+        },
+        "programChoice2": {
+          "type": "string",
+          "description": "Second choice of academic program.",
+          "maxLength": 150
+        },
+        "entryQualification": {
+          "type": "string",
+          "description": "Academic entry qualification credential.",
+          "maxLength": 100
+        },
+        "olevelExam": {
+          "type": "string",
+          "description": "O-Level examination body (WAEC, NECO, NABTEB).",
+          "maxLength": 50
+        },
+        "olevelYear": {
+          "type": "string",
+          "description": "Year examination was sat.",
+          "maxLength": 10
+        },
+        "olevelRegNo": {
+          "type": "string",
+          "description": "O-Level registration / center number.",
+          "maxLength": 50
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the admission application.",
+          "enum": ["submitted", "under_review", "admitted", "declined"]
+        },
+        "paymentStatus": {
+          "type": "string",
+          "description": "Application fee settlement status.",
+          "enum": ["paid", "pending"]
+        },
+        "paymentReference": {
+          "type": "string",
+          "description": "Remita / Paystack payment transaction reference.",
+          "maxLength": 100
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when application was submitted."
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp of the last status or data update."
+        }
+      },
+      "required": ["id", "fullName", "email", "phone", "programChoice1", "status", "paymentStatus", "createdAt"]
+    },
+    "Inquiry": {
+      "title": "Inquiry",
+      "description": "Contact message or admission eligibility question submitted by visitors.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique inquiry document ID.",
+          "maxLength": 64
+        },
+        "fullName": {
+          "type": "string",
+          "description": "Full name of the inquiring person.",
+          "maxLength": 120
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Email address for reply.",
+          "maxLength": 120
+        },
+        "phone": {
+          "type": "string",
+          "description": "Phone number.",
+          "maxLength": 30
+        },
+        "subject": {
+          "type": "string",
+          "description": "Subject of the message.",
+          "maxLength": 150
+        },
+        "message": {
+          "type": "string",
+          "description": "Inquiry content or question.",
+          "maxLength": 1000
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Submission timestamp."
+        }
+      },
+      "required": ["fullName", "email", "message", "createdAt"]
+    },
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "User account document associated with Firebase Auth.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID.",
+          "maxLength": 128
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "User email address.",
+          "maxLength": 120
+        },
+        "displayName": {
+          "type": "string",
+          "description": "User full name or alias.",
+          "maxLength": 120
+        },
+        "photoURL": {
+          "type": "string",
+          "description": "Profile picture URL.",
+          "maxLength": 500
+        },
+        "role": {
+          "type": "string",
+          "description": "User role in the college system.",
+          "enum": ["student", "faculty", "admin"]
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Account registration timestamp."
+        },
+        "lastLoginAt": {
+          "type": "string",
+          "description": "Last login timestamp."
+        }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "College notice or news headline.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Announcement ID.",
+          "maxLength": 64
+        },
+        "title": {
+          "type": "string",
+          "description": "Announcement title.",
+          "maxLength": 200
+        },
+        "category": {
+          "type": "string",
+          "description": "Category (Admissions, Academics, Matriculation, Clinical Posting).",
+          "maxLength": 50
+        },
+        "content": {
+          "type": "string",
+          "description": "Announcement details.",
+          "maxLength": 2000
+        },
+        "author": {
+          "type": "string",
+          "description": "Author or department name.",
+          "maxLength": 100
+        },
+        "isPublished": {
+          "type": "boolean",
+          "description": "Whether announcement is visible publicly."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Creation timestamp."
+        }
+      },
+      "required": ["title", "category", "content", "isPublished", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/applications/{applicationId}": {
+      "schema": { "$ref": "#/entities/Application" },
+      "description": "Collection of student admission applications."
+    },
+    "/inquiries/{inquiryId}": {
+      "schema": { "$ref": "#/entities/Inquiry" },
+      "description": "Public inquiries, feedback, and admission questions."
+    },
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Registered faculty and student user profiles."
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Official college circulars, notices, and news broadcasts."
+    }
+  }
+}

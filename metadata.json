@@ -1,0 +1,6 @@
+{
+  "name": "HINSAD College of Health Technology & General Studies",
+  "description": "Official web portal and e-portal for HINSAD College of Health Technology & General Studies, Bauchi. Featuring academic programs, online admissions, student & staff portal, result verification, and course catalog.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
